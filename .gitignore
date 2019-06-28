@@ -1,0 +1,6 @@
+product/
+release/
+venv/
+# do not save the completed zip files
+*.tgz
+.DS_Store

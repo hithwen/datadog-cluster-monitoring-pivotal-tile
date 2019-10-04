@@ -389,7 +389,9 @@ packages:
 - name: datadog-agent-boshrelease
   type: bosh-release
   path: resources/datadog-agent-boshrelease.tgz
-
+- name: datadog-agent-windows-boshrelease
+  type: bosh-release
+  path: resources/datadog-agent-windows-boshrelease.tgz
 
 runtime_configs:
   - name: datadog-agent
@@ -397,7 +399,10 @@ runtime_configs:
       releases:
         - name: datadog-agent
           version: 2.12.6140 # Update this if update the agent
+        - name: datadog-agent-windows
+          version: 6.14.0-beta.8 # Update this if update the agent
       addons:
+      # Linux Agent Installation
       - name: datadog
         include:
           stemcell:
@@ -407,6 +412,68 @@ runtime_configs:
         jobs:
         - name: dd-agent
           release: datadog-agent
+        properties:
+          dd:
+            skip_ssl_validation: (( .properties.skip_ssl_validation.value ))
+            use_dogstatsd: yes
+            dogstatsd_port: 18125 # Many Cloud Foundry deployments have their own StatsD listening on port 8125
+            process_agent_enabled: yes
+            api_key: (( .properties.api_key.value ))
+            additional_api_key_1: (( .properties.additional_api_key_1.value ))
+            additional_api_url_1: (( .properties.additional_api_url_1.value ))
+            additional_api_key_2: (( .properties.additional_api_key_2.value ))
+            additional_api_url_2: (( .properties.additional_api_url_2.value ))
+            additional_api_key_3: (( .properties.additional_api_key_3.value ))
+            additional_api_url_3: (( .properties.additional_api_url_3.value ))
+            additional_api_key_4: (( .properties.additional_api_key_4.value ))
+            additional_api_url_4: (( .properties.additional_api_url_4.value ))
+            additional_api_key_5: (( .properties.additional_api_key_5.value ))
+            additional_api_url_5: (( .properties.additional_api_url_5.value ))
+            friendly_hostname: (( .properties.use_friendly_hostname.value ))
+            unique_friendly_hostname: (( .properties.unique_friendly_hostname.value ))
+            cf_os_hostname_aliasing: (( .properties.cf_os_hostname_aliasing.value ))
+            tags: (( .properties.tags.value ))
+            proxy:
+              http: (( .properties.http_proxy_url.value ))
+              https: (( .properties.https_proxy_url.value ))
+              no_proxy: (( .properties.no_proxy.value ))
+            url: (( .properties.api_url.value ))
+            use_uuid_hostname: (( .properties.use_uuid_hostname.value ))
+            process_agent_enabled: (( .properties.process_agent_enabled.value ))
+            agent_listen_port: (( .properties.agent_listen_port.value ))
+            generate_processes: (( .properties.generate_processes.value ))
+            generate_monit_processes: (( .properties.generate_monit_processes.value ))
+            generate_system_processes: (( .properties.generate_system_processes.value ))
+            generate_ntp_config: (( .properties.generate_ntp_config.value ))
+            generate_ntp_config_host: (( .properties.generate_ntp_config_host.value ))
+            generate_disk_config: (( .properties.generate_disk_config.value ))
+            generate_disk_config_tag_by_filesystem: (( .properties.generate_disk_config_tag_by_filesystem.value ))
+            generate_disk_config_all_partitions: (( .properties.generate_disk_config_all_partitions.value ))
+            disk_yaml_config: (( .properties.disk_yaml_config.value ))
+            enable_gohai: (( .properties.enable_gohai.value ))
+            check_runners: (( .properties.check_runners.value ))
+            forwarder_num_workers: (( .properties.forwarder_num_workers.value ))
+            ip_tag: (( .properties.ip_tag.value ))
+            address_tag: (( .properties.address_tag.value ))
+            trace_agent_enabled: (( .properties.trace_agent.value ))
+            enable_logs_agent: (( .properties.logs_enabled.value ))
+            strip_proc_arguments: (( .properties.strip_proc_arguments.value ))
+            secret_backend_command: (( .properties.secret_backend_command.value ))
+            secret_backend_arguments: (( .properties.secret_backend_arguments.parsed_strings ))
+            secret_backend_output_max_size: (( .properties.secret_backend_output_max_size.value ))
+            secret_backend_timeout: (( .properties.secret_backend_timeout.value ))
+
+        # Windows Agent Installation
+      - name: datadog-windows
+        include:
+          stemcell:
+          - os: windows2019
+          - os: windows1803
+          - os: windows2016
+          - os: windows2012R2
+        jobs:
+        - name: dd-agent-windows
+          release: datadog-agent-windows
         properties:
           dd:
             skip_ssl_validation: (( .properties.skip_ssl_validation.value ))

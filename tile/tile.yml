@@ -419,6 +419,10 @@ runtime_configs:
           - os: ubuntu-xenial
           - os: ubuntu-trusty
           - os: centos-7
+        exclude:
+          jobs:
+          - name: kubelet
+            release: kubo
         jobs:
         - name: dd-agent
           release: datadog-agent

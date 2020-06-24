@@ -131,7 +131,7 @@ forms:
   - name: metadata_keys_whitelist_patterns
     type: string_list
     label: Metadata Whitelist
-    default: ""
+    optional: true
     description: |
       Comma separated list of regular expressions.
       Label and annotation keys that match any regular expression in this list are included.
@@ -140,7 +140,7 @@ forms:
   - name: metadata_keys_blacklist_patterns
     type: string_list
     label: Metadata Blacklist
-    default: ""
+    optional: true
     description: |
       Comma separated list of regular expressions.
       Label and annotation keys that match any regular expression in this list are excluded.

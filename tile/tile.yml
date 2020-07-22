@@ -123,6 +123,29 @@ forms:
     label: App Metrics
     default: true
     description: Grab app container metrics (e.g. cpu and memory usage).
+  - name: enable_metadata_collection
+    type: boolean
+    label: Enable Metadata Collection
+    default: false
+    description: Collect application, space and organization labels and annotations to tag App Metrics.
+  - name: metadata_keys_whitelist_patterns
+    type: string_list
+    label: Metadata Whitelist
+    optional: true
+    description: |
+      Comma separated list of regular expressions.
+      Label and annotation keys that match any regular expression in this list are included.
+      If neither a whitelist nor a blacklist is provided, everything is included.
+      If a key matches both a whitelist and a blacklist pattern, it is excluded.
+  - name: metadata_keys_blacklist_patterns
+    type: string_list
+    label: Metadata Blacklist
+    optional: true
+    description: |
+      Comma separated list of regular expressions.
+      Label and annotation keys that match any regular expression in this list are excluded.
+      If neither a whitelist nor a blacklist is provided, everything is included.
+      If a key matches both a whitelist and a blacklist pattern, it is excluded.
   - name: num_workers
     type: integer
     label: Number of Worker Threads
@@ -537,6 +560,9 @@ packages:
           http_proxy_url: (( .properties.http_proxy_url.value ))
           https_proxy_url: (( .properties.https_proxy_url.value ))
           no_proxy: (( .properties.no_proxy.value ))
+          enable_metadata_collection: (( .properties.enable_metadata_collection.value ))
+          metadata_keys_whitelist_patterns: (( .properties.metadata_keys_whitelist_patterns.parsed_strings ))
+          metadata_keys_blacklist_patterns: (( .properties.metadata_keys_blacklist_patterns.parsed_strings ))
         uaa:
           client: (( .properties.uaa_client.value ))
           client_secret: (( .properties.uaa_secret.value ))

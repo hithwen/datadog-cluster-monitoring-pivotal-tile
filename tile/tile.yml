@@ -33,7 +33,7 @@ forms:
     description: The host of the Datadog intake server to send data to (e.g. https://app.datadoghq.com)
     default: https://app.datadoghq.com
   - name: tags
-    type: string
+    type: string_list
     label: Tags
     description: Set custom tags, separated by a comma (e.g. foundry:myfoundry,env:production)
     optional: true
@@ -48,7 +48,7 @@ forms:
     label: HTTPS Proxy URL
     description: Set a URL for an https proxy
   - name: no_proxy
-    type: string
+    type: string_list
     optional: true
     label: No Proxy
     description: Set urls that should skip the proxy, separated by a comma (e.g. datadoghq.com,google.com,example.engineering)
@@ -428,6 +428,18 @@ forms:
         label: Cluster Agent port
         default: 5005
         description: Port on which the Cluster Agent can be reached by Node Agents.
+      - name: enable_cloud_foundry_api_check
+        configurable: true
+        type: boolean
+        label: Enable Cloud Foundry API Integration
+        default: false
+        description: Whether or not to enable and configure the Cloud Foundry API integration to collect audit events.
+      - name: cloud_foundry_api_check_event_filter
+        configurable: true
+        type: string_list
+        label: List of events to collect
+        default: audit.app.restage,audit.app.update,audit.app.create,app.crash
+        description: Comma separated list of Cloud Foundry audit events to collect.
   - name: cluster_agent_bbs_auth_generation
     type: selector
     label: Automatically generate certificate and private key for BBS API communication when Cluster Agent is enabled
@@ -598,6 +610,17 @@ packages:
           token: (( .properties.cluster_agent_enabled.enabled_option.cluster_agent_token.value ))
           port: (( .properties.cluster_agent_enabled.enabled_option.cluster_agent_port.value ))
           enabled: (( .properties.cluster_agent_enabled.selected_option.parsed_manifest(cluster_agent_enabled) ))
+          enable_cloud_foundry_api_check: (( .properties.cluster_agent_enabled.enabled_option.enable_cloud_foundry_api_check.value ))
+        cloud_foundry_api:
+          api_url: https://api.(( ..cf.cloud_controller.system_domain.value ))
+          client_id: (( .properties.uaa_client.value ))
+          client_secret: (( .properties.uaa_secret.value ))
+          event_filter: (( .properties.cluster_agent_enabled.enabled_option.cloud_foundry_api_check_event_filter.parsed_strings ))
+          tags: (( .properties.tags.parsed_strings ))
+          skip_ssl_validation: (( .properties.insecure_ssl_skip_verify.value ))
+          https_proxy: (( .properties.https_proxy_url.value ))
+          http_proxy: (( .properties.http_proxy_url.value ))
+          no_proxy: (( .properties.no_proxy.parsed_strings ))
 
 - name: datadog-agent-boshrelease
   type: bosh-release

@@ -639,7 +639,7 @@ runtime_configs:
   runtime_config:
     releases:
     - name: datadog-agent
-      version: "4.3.0"     # Update this if update the agent
+      version: "4.4.1"     # Update this if update the agent
     addons:
     - name: datadog
       include:
@@ -721,7 +721,7 @@ runtime_configs:
   runtime_config:
     releases:
     - name: datadog-agent
-      version: "4.3.0"     # Update this if update the agent
+      version: "4.4.1"     # Update this if update the agent
     addons:
     - name: datadog
       include:
@@ -787,12 +787,12 @@ runtime_configs:
           cluster_agent_poll_interval: (( .properties.cluster_agent_poll_interval.value ))
           integrations:
             etcd:
-             init_config: {}
-             instances:
-             - prometheus_url: https://localhost:2379/metrics
-               tls_verify: false
-               tls_cert: /var/vcap/jobs/etcd/config/etcd.crt
-               tls_private_key: /var/vcap/jobs/etcd/config/etcd.key
+              init_config: {}
+              instances:
+              - prometheus_url: https://localhost:2379/metrics
+                tls_verify: false
+                tls_cert: /var/vcap/jobs/etcd/config/etcd.crt
+                tls_private_key: /var/vcap/jobs/etcd/config/etcd.key
             kube_apiserver_metrics:
               init_config: {}
               instances:
